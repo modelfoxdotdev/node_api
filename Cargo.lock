@@ -341,7 +341,7 @@ name = "node_api"
 version = "0.1.0"
 dependencies = [
  "node_api_macro",
- "node_api_sys",
+ "node_api_system",
  "num",
  "serde",
 ]
@@ -356,7 +356,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "node_api_sys"
+name = "node_api_system"
 version = "0.1.0"
 dependencies = [
  "reqwest",
