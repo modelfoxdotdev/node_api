@@ -17,7 +17,7 @@ pub use self::{
 	},
 };
 pub use node_api_macro::{function, init};
-pub use node_api_system as sys;
+pub use node_api_sys as sys;
 
 pub fn fatal_error(location: Option<&str>, message: Option<&str>) {
 	unsafe {

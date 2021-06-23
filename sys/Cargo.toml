@@ -1,14 +1,14 @@
 [package]
 authors = ["Tangram <root@tangram.xyz"]
 description = "Write Node.js native addons with Node-API in Rust."
-documentation = "https://docs.rs/node_api_system"
+documentation = "https://docs.rs/node_api_sys"
 edition = "2018"
 homepage = "https://github.com/tangramxyz/node_api"
 license = "MIT"
-name = "node_api_system"
+name = "node_api_sys"
 publish = true
 repository = "https://github.com/tangramxyz/node_api"
-version = "0.1.0"
+version = "0.2.0"
 
 [lib]
 path = "lib.rs"

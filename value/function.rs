@@ -1,4 +1,4 @@
-use node_api_system::napi_status;
+use node_api_sys::napi_status;
 
 use crate::{
 	sys::{napi_callback_info, napi_create_function, napi_env, napi_value},

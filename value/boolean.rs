@@ -1,6 +1,6 @@
 use std::mem::MaybeUninit;
 
-use node_api_system::napi_status;
+use node_api_sys::napi_status;
 
 use crate::{
 	sys::{napi_get_boolean, napi_get_value_bool},
