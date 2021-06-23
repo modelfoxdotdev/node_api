@@ -26,6 +26,6 @@ serde_1 = ["serde"]
 
 [dependencies]
 node_api_macro = { version = "0.2", path = "macro" }
-node_api_sys = { version = "0.2", path = "sys" }
+node_api_system = { version = "0.2", path = "sys" }
 num = "0.4"
 serde = { version = "1", optional = true }
