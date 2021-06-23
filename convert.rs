@@ -5,8 +5,8 @@ use crate::{
 use num::{FromPrimitive, ToPrimitive};
 
 #[allow(clippy::wrong_self_convention, clippy::upper_case_acronyms)]
-pub trait ToNodeAPI<'a>: 'a {
-	fn to_node_api(self, env: Env<'a>) -> Result<Value<'a>>;
+pub trait IntoNodeApi<'a>: 'a {
+	fn into_node_api(self, env: Env<'a>) -> Result<Value<'a>>;
 }
 
 #[allow(clippy::wrong_self_convention, clippy::upper_case_acronyms)]
@@ -14,8 +14,8 @@ pub trait FromNodeAPI<'a>: 'a + Sized {
 	fn from_node_api(value: Value<'a>) -> Result<Self>;
 }
 
-impl<'a> ToNodeAPI<'a> for () {
-	fn to_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for () {
+	fn into_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
 		Ok(Null::new(env)?.value())
 	}
 }
@@ -27,8 +27,8 @@ impl<'a> FromNodeAPI<'a> for () {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for bool {
-	fn to_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for bool {
+	fn into_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
 		Ok(Boolean::new(env, self)?.value())
 	}
 }
@@ -43,8 +43,8 @@ impl<'a> FromNodeAPI<'a> for bool {
 
 macro_rules! impl_to_from_for_number_type {
 	($ty:ty) => {
-		impl<'a> ToNodeAPI<'a> for $ty {
-			fn to_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
+		impl<'a> IntoNodeApi<'a> for $ty {
+			fn into_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
 				let value =
 					<$ty>::to_f64(&self).ok_or_else(|| Error::message("number out of bounds"))?;
 				let number = Number::new(env, value)?;
@@ -76,8 +76,8 @@ impl_to_from_for_number_type!(i64);
 impl_to_from_for_number_type!(f32);
 impl_to_from_for_number_type!(f64);
 
-impl<'a> ToNodeAPI<'a> for char {
-	fn to_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for char {
+	fn into_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
 		Ok(String::new(env, &self.to_string())?.value())
 	}
 }
@@ -88,14 +88,14 @@ impl<'a> FromNodeAPI<'a> for char {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for &'a str {
-	fn to_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for &'a str {
+	fn into_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
 		Ok(String::new(env, self)?.value())
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for std::string::String {
-	fn to_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for std::string::String {
+	fn into_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
 		Ok(String::new(env, self.as_str())?.value())
 	}
 }
@@ -106,14 +106,14 @@ impl<'a> FromNodeAPI<'a> for std::string::String {
 	}
 }
 
-impl<'a, T> ToNodeAPI<'a> for Option<T>
+impl<'a, T> IntoNodeApi<'a> for Option<T>
 where
-	T: ToNodeAPI<'a>,
+	T: IntoNodeApi<'a>,
 {
-	fn to_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
+	fn into_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
 		match self {
 			None => Ok(Null::new(env)?.value()),
-			Some(value) => Ok(value.to_node_api(env)?),
+			Some(value) => Ok(value.into_node_api(env)?),
 		}
 	}
 }
@@ -131,14 +131,14 @@ where
 	}
 }
 
-impl<'a, T> ToNodeAPI<'a> for Vec<T>
+impl<'a, T> IntoNodeApi<'a> for Vec<T>
 where
-	T: ToNodeAPI<'a>,
+	T: IntoNodeApi<'a>,
 {
-	fn to_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
+	fn into_node_api(self, env: Env<'a>) -> Result<Value<'a>> {
 		let mut array = Array::new(env)?;
 		for (i, value) in self.into_iter().enumerate() {
-			array.set(i, value.to_node_api(env)?)?;
+			array.set(i, value.into_node_api(env)?)?;
 		}
 		Ok(array.value())
 	}
@@ -158,8 +158,8 @@ where
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for Value<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for Value<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self)
 	}
 }
@@ -170,8 +170,8 @@ impl<'a> FromNodeAPI<'a> for Value<'a> {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for Array<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for Array<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }
@@ -182,8 +182,8 @@ impl<'a> FromNodeAPI<'a> for Array<'a> {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for ArrayBuffer<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for ArrayBuffer<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }
@@ -194,8 +194,8 @@ impl<'a> FromNodeAPI<'a> for ArrayBuffer<'a> {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for BigInt<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for BigInt<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }
@@ -206,8 +206,8 @@ impl<'a> FromNodeAPI<'a> for BigInt<'a> {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for Boolean<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for Boolean<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }
@@ -218,8 +218,8 @@ impl<'a> FromNodeAPI<'a> for Boolean<'a> {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for Buffer<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for Buffer<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }
@@ -230,8 +230,8 @@ impl<'a> FromNodeAPI<'a> for Buffer<'a> {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for DataView<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for DataView<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }
@@ -242,8 +242,8 @@ impl<'a, 'b: 'a> FromNodeAPI<'a> for DataView<'a> {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for Date<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for Date<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }
@@ -254,8 +254,8 @@ impl<'a> FromNodeAPI<'a> for Date<'a> {
 	}
 }
 
-impl<'a, T: 'a> ToNodeAPI<'a> for External<'a, T> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a, T: 'a> IntoNodeApi<'a> for External<'a, T> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }
@@ -266,8 +266,8 @@ impl<'a, T: 'a> FromNodeAPI<'a> for External<'a, T> {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for Function<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for Function<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }
@@ -278,8 +278,8 @@ impl<'a> FromNodeAPI<'a> for Function<'a> {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for Null<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for Null<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }
@@ -290,8 +290,8 @@ impl<'a> FromNodeAPI<'a> for Null<'a> {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for Number<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for Number<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }
@@ -302,8 +302,8 @@ impl<'a> FromNodeAPI<'a> for Number<'a> {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for Object<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for Object<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }
@@ -314,8 +314,8 @@ impl<'a> FromNodeAPI<'a> for Object<'a> {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for String<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for String<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }
@@ -327,8 +327,8 @@ impl<'a> FromNodeAPI<'a> for String<'a> {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for Symbol<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for Symbol<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }
@@ -339,8 +339,8 @@ impl<'a> FromNodeAPI<'a> for Symbol<'a> {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for TypedArray<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for TypedArray<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }
@@ -351,8 +351,8 @@ impl<'a> FromNodeAPI<'a> for TypedArray<'a> {
 	}
 }
 
-impl<'a> ToNodeAPI<'a> for Undefined<'a> {
-	fn to_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
+impl<'a> IntoNodeApi<'a> for Undefined<'a> {
+	fn into_node_api(self, _env: Env<'a>) -> Result<Value<'a>> {
 		Ok(self.value())
 	}
 }

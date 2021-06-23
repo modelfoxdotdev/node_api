@@ -8,7 +8,7 @@ mod serde;
 mod value;
 
 pub use self::{
-	convert::{FromNodeAPI, ToNodeAPI},
+	convert::{FromNodeAPI, IntoNodeApi},
 	env::Env,
 	error::{Error, Result},
 	value::{

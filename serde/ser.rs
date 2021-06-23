@@ -1,4 +1,4 @@
-use crate::{Array, ArrayBuffer, Env, Error, Null, Object, Result, String, ToNodeAPI, Value};
+use crate::{Array, ArrayBuffer, Env, Error, IntoNodeApi, Null, Object, Result, String, Value};
 use serde::Serialize;
 
 impl<'a> serde::Serializer for Env<'a> {
@@ -13,51 +13,51 @@ impl<'a> serde::Serializer for Env<'a> {
 	type SerializeStructVariant = StructVariantSerializer<'a>;
 
 	fn serialize_bool(self, value: bool) -> Result<Self::Ok, Self::Error> {
-		value.to_node_api(self)
+		value.into_node_api(self)
 	}
 
 	fn serialize_i8(self, value: i8) -> Result<Self::Ok, Self::Error> {
-		value.to_node_api(self)
+		value.into_node_api(self)
 	}
 
 	fn serialize_i16(self, value: i16) -> Result<Self::Ok, Self::Error> {
-		value.to_node_api(self)
+		value.into_node_api(self)
 	}
 
 	fn serialize_i32(self, value: i32) -> Result<Self::Ok, Self::Error> {
-		value.to_node_api(self)
+		value.into_node_api(self)
 	}
 
 	fn serialize_i64(self, value: i64) -> Result<Self::Ok, Self::Error> {
-		value.to_node_api(self)
+		value.into_node_api(self)
 	}
 
 	fn serialize_u8(self, value: u8) -> Result<Self::Ok, Self::Error> {
-		value.to_node_api(self)
+		value.into_node_api(self)
 	}
 
 	fn serialize_u16(self, value: u16) -> Result<Self::Ok, Self::Error> {
-		value.to_node_api(self)
+		value.into_node_api(self)
 	}
 
 	fn serialize_u32(self, value: u32) -> Result<Self::Ok, Self::Error> {
-		value.to_node_api(self)
+		value.into_node_api(self)
 	}
 
 	fn serialize_u64(self, value: u64) -> Result<Self::Ok, Self::Error> {
-		value.to_node_api(self)
+		value.into_node_api(self)
 	}
 
 	fn serialize_f32(self, value: f32) -> Result<Self::Ok, Self::Error> {
-		value.to_node_api(self)
+		value.into_node_api(self)
 	}
 
 	fn serialize_f64(self, value: f64) -> Result<Self::Ok, Self::Error> {
-		value.to_node_api(self)
+		value.into_node_api(self)
 	}
 
 	fn serialize_char(self, value: char) -> Result<Self::Ok, Self::Error> {
-		value.to_node_api(self)
+		value.into_node_api(self)
 	}
 
 	fn serialize_str(self, value: &str) -> Result<Self::Ok, Self::Error> {

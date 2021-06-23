@@ -113,7 +113,7 @@ fn function_impl(input: proc_macro2::TokenStream) -> syn::Result<proc_macro2::To
 				}
 				#(#from_node_api_statements)*
 				let output = function_impl(env, #(#args),*).map_err(|error| node_api::Error::message(error.to_string()))?;
-				let output = node_api::ToNodeAPI::to_node_api(output, env)?;
+				let output = node_api::IntoNodeApi::into_node_api(output, env)?;
 				Ok(output)
 			});
 			let result = match result {
