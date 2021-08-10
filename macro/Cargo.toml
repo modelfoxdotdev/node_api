@@ -1,13 +1,13 @@
 [package]
-authors = ["Tangram <root@tangram.xyz"]
+authors = ["Tangram <root@tangram.dev"]
 description = "Write Node.js native addons with Node-API in Rust."
 documentation = "https://docs.rs/node_api_macro"
 edition = "2018"
-homepage = "https://github.com/tangramxyz/node_api"
+homepage = "https://github.com/tangramdotdev/node_api"
 license = "MIT"
 name = "node_api_macro"
 publish = true
-repository = "https://github.com/tangramxyz/node_api"
+repository = "https://github.com/tangramdotdev/node_api"
 version = "0.3.1"
 
 [lib]
