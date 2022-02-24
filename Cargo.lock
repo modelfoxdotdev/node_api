@@ -328,7 +328,7 @@ dependencies = [
 
 [[package]]
 name = "node_api"
-version = "0.4.0"
+version = "0.4.1"
 dependencies = [
  "node_api_macro",
  "node_api_system",
@@ -338,7 +338,7 @@ dependencies = [
 
 [[package]]
 name = "node_api_macro"
-version = "0.4.0"
+version = "0.4.1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -347,7 +347,7 @@ dependencies = [
 
 [[package]]
 name = "node_api_system"
-version = "0.4.0"
+version = "0.4.1"
 dependencies = [
  "reqwest",
 ]
