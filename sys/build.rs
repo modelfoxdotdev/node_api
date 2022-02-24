@@ -16,7 +16,7 @@ fn main() {
 			println!("cargo:rustc-link-lib=node");
 		}
 		Err(e) => {
-			panic!(e);
+			panic!("{}", e);
 		}
 	}
 }
