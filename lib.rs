@@ -3,7 +3,7 @@ use std::os::raw::c_char;
 mod convert;
 mod env;
 mod error;
-#[cfg(feature = "serde_1")]
+#[cfg(feature = "serde")]
 mod serde;
 mod value;
 
