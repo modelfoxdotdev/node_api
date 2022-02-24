@@ -1,15 +1,15 @@
 fn main() {
-	let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap();
-	if target_os == "macos" {
-		macos_setup();
-	} else if target_os == "windows" {
-		windows_setup();
+	match std::env::var("NODE_API_WINDOWS_X64_IMPORT_LIBRARY") {
+		Ok(path) => {
+			// set path
+			println!("cargo:rustc-link-search={}", path);
+			println!("cargo:rustc-link-lib=node");
+		}
+		Err(_) => {
+			// It's not set, download it.
+			windows_setup()
+		}
 	}
-}
-
-fn macos_setup() {
-	println!("cargo:rustc-cdylib-link-arg=-undefined");
-	println!("cargo:rustc-cdylib-link-arg=dynamic_lookup");
 }
 
 fn windows_setup() {
