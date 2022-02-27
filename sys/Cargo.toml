@@ -8,7 +8,7 @@ license = "MIT"
 name = "node_api_system"
 publish = true
 repository = "https://github.com/tangramdotdev/node_api"
-version = "0.4.1"
+version = "0.5.0"
 
 [lib]
 path = "lib.rs"
